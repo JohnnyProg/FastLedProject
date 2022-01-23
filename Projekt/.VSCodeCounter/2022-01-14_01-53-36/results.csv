@@ -1,0 +1,16 @@
+"filename", "language", "C++", "comment", "blank", "total"
+"c:\Users\Johnny\Desktop\ESP32\Projekt1\src\Bouncing.cpp", "C++", 64, 4, 8, 76
+"c:\Users\Johnny\Desktop\ESP32\Projekt1\src\Disable.cpp", "C++", 48, 1, 9, 58
+"c:\Users\Johnny\Desktop\ESP32\Projekt1\src\Effect.cpp", "C++", 15, 0, 3, 18
+"c:\Users\Johnny\Desktop\ESP32\Projekt1\src\Fire.cpp", "C++", 92, 2, 17, 111
+"c:\Users\Johnny\Desktop\ESP32\Projekt1\src\GradientMoving.cpp", "C++", 52, 5, 11, 68
+"c:\Users\Johnny\Desktop\ESP32\Projekt1\src\Rain.cpp", "C++", 51, 4, 9, 64
+"c:\Users\Johnny\Desktop\ESP32\Projekt1\src\Rainbow.cpp", "C++", 46, 0, 11, 57
+"c:\Users\Johnny\Desktop\ESP32\Projekt1\src\RainbowFull.cpp", "C++", 41, 0, 9, 50
+"c:\Users\Johnny\Desktop\ESP32\Projekt1\src\ServerConnectivity.cpp", "C++", 0, 122, 20, 142
+"c:\Users\Johnny\Desktop\ESP32\Projekt1\src\StaticColor.cpp", "C++", 45, 1, 8, 54
+"c:\Users\Johnny\Desktop\ESP32\Projekt1\src\Stroboscop.cpp", "C++", 56, 1, 8, 65
+"c:\Users\Johnny\Desktop\ESP32\Projekt1\src\Train.cpp", "C++", 79, 12, 14, 105
+"c:\Users\Johnny\Desktop\ESP32\Projekt1\src\TrainsWithManyColors.cpp", "C++", 83, 29, 13, 125
+"c:\Users\Johnny\Desktop\ESP32\Projekt1\src\main.cpp", "C++", 266, 9, 17, 292
+"Total", "-", 938, 190, 157, 1285
