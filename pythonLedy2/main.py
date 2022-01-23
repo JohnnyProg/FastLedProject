@@ -78,7 +78,6 @@ def analize_volume(data):
     # m = m - 50
     return m
 
-zmiennatest = 1
 while True:
     start = time.time()
     data = np.fromstring(stream.read(CHUNK),dtype=np.int16)

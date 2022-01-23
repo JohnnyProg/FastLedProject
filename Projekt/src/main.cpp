@@ -195,8 +195,8 @@ void setup()
     FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
     // server.start("Dom", "Kabanos1", NUM_LEDS, leds);
     setupServer("UPC3356958", "m3sdBthjwfus");
-    // effect = new Rainbow(speed, brightness, 10, leds, NUM_LEDS);
-    effect = new StaticColor(brightness, leds, NUM_LEDS);
+    effect = new Rainbow(speed, brightness, 10, leds, NUM_LEDS);
+    // effect = new StaticColor(brightness, leds, NUM_LEDS);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
