@@ -52,6 +52,9 @@ char webpage123[] = R"=====(
         var x = document.getElementById("gradientMovingChoose").value;
         Socket.send("Egradientmoving" + x);
     }
+    function chooseGradientMusic() {
+      Socket.send("Egradientmusic");
+    }
     function chooseFullColor() {
       Socket.send("Efullcolor");
     }
@@ -118,6 +121,10 @@ char webpage123[] = R"=====(
         <option value="rgb">RGB</option>
         <option value="redblue">Red Blue</option>
       </select>
+  </div>
+  <hr/>
+  <div>
+    <input type="button" value="GradientMusic" id="GradientMusic" onclick="chooseGradientMusic()" />
   </div>
   <hr/>
   <div>

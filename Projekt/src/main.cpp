@@ -12,6 +12,7 @@
 #include "Disable.cpp"
 #include "Stroboscop.cpp"
 #include "GradientMoving.cpp"
+#include "GradientMusic.cpp"
 #include "ChangeFullColors.cpp"
 
 #include <Arduino.h> //podstawowa biblioteka
@@ -119,6 +120,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                   delete effect;
                   effect = new GradientMoving(brightness, speed, 4, leds, NUM_LEDS);
                 }
+            } else if (substr == "gradientmusic") {
+                delete effect;
+                effect = new GradientMusic(brightness, 1, leds, NUM_LEDS);
             } else if (substr == "fullcolor") {
                 delete effect;
                 ChangeFullColors* t = new ChangeFullColors(speed, brightness, leds, NUM_LEDS);
