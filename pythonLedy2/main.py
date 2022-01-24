@@ -73,7 +73,7 @@ def analize_volume(data):
     # avenged sevenfold tested
     # m = translate(peak, 0, 30182, 10, 800)
     # testy inne
-    # m = translate(peak, 0, 20182, 10, 800)
+    m = translate(peak, 0, 20182, 10, 800)
     # m = translate(peak, 0, 5182, 10, 1000)
     # m = m - 50
     return m
@@ -95,9 +95,9 @@ while True:
     if m > true_value:
         true_value = m
     elif m < true_value:
-        true_value = true_value - 3
+        true_value = true_value - 10
     #     3
-
+    # zauważyłem że jeżeli nowa wartość jest mniejsza o 1 to i tak zmniejaszam o więcej; trzeba będzie zacząć porównywać te wartości
     if true_value >= 255:
         true_value = 255
     if(true_value < 40):
