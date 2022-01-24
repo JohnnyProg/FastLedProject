@@ -1,0 +1,18 @@
+Włączenie
+Wybór łapania muzyki:
+	1.wybór analizy głośności
+		-zmiana dwóch zmiennych dotyczących mapowania
+		-zmiana wartości max i min
+		-domyślne wartości
+		-tworzenie templatek
+	2.wybór analizy EQ
+		-zmiana dwóch zmiennych dotyczących mapowania
+		-zmiana wartości max i min
+		-zmiana przechywywanych częstotliwości
+		-domyślne wartości
+		-tworzenie templatek
+Wybór przechwytywania obrazu:
+	1.zmiana wartości nasycenia i jasności
+Wyświetlanie statusu połączenia
+Wyświetlanie przesyłanych danych:
+	1.wyświetlanie wartości max/min
