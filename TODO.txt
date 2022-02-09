@@ -1,0 +1,9 @@
+funkcjonalność zmiany hue and saturation w kontroli obrazem
+wysłanie obrazu do okna i wyświetlenie go przed i po 
+dodanie obsługi ledów z okna; MUSI BYĆ PROSTE DODAWANIE EFEKTÓW
+"pożyczenie" paczki ikon razem z themem(kolory czcionki)
+try catch dużo w esp
+stworzenie pętli nieskończonej w oknie 
+
+
+dodanie do task bara i stworzenie szybkiego menu wyboru 
