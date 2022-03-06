@@ -2,6 +2,7 @@
 #define GRADIENTS_H
 
 char webpage123[] = R"=====(
+
 <html>
 <head>
   <script>
@@ -71,94 +72,100 @@ char webpage123[] = R"=====(
       Socket.send("VCS" + document.getElementById("favcolor").value);
     }
   </script>
+  <style>
+    .mainbody {
+      width: 600px;
+      margin:0 auto;
+    }
+    .button { 
+      width: 500px;
+      height: 30px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 10px;
+      position: relative;
+      left: 50px;
+      
+    }
+  </style>
 </head>
 <body onload="javascript:init()">
+  
+  <div class="mainbody">
   <div>
-    <input type="button" value="Disable" id="disable" onclick="chooseDisable();" />
+    <input class="button"type="button" value="Disable" id="disable" onclick="chooseDisable();" />
   </div>
-  <hr/>
   <div>
-    <input type="button" value="Train" id="rainbow" onclick="chooseTrain();" />
+    <input class="button"type="button" value="Train" id="rainbow" onclick="chooseTrain();" />
   </div>
-  <hr/>
   <div>
-    <input type="button" value="Rainbow" id="rainbow" onclick="chooseRainbow()" />
+    <input class="button"type="button" value="Rainbow" id="rainbow" onclick="chooseRainbow()" />
   </div>  
-  <hr/>
   <div>
-    <input type="button" value="Bounce" id="bounce" onclick="chooseBounce()" />
+    <input class="button"type="button" value="Bounce" id="bounce" onclick="chooseBounce()" />
   </div>  
-    <hr/>
+
   <div>
-    <input type="button" value="Train 2" id="train2" onclick="chooseTrain2()" />
+    <input class="button"type="button" value="Train 2" id="train2" onclick="chooseTrain2()" />
   </div>
-  <hr/>
   <div>
-    <input type="button" value="StaticColor" id="staticColor" onclick="chooseStaticColor()" />
+    <input class="button"type="button" value="StaticColor" id="staticColor" onclick="chooseStaticColor()" />
   </div>
-  <hr/>
   <div>
-    <input type="button" value="Rainbow2" id="rainbow2" onclick="chooseRainbow2()" />
+    <input class="button"type="button" value="Rainbow2" id="rainbow2" onclick="chooseRainbow2()" />
   </div>
-  <hr/>
   <div>
-    <input type="button" value="Rain" id="rain" onclick="chooseRain()" />
+    <input class="button"type="button" value="Rain" id="rain" onclick="chooseRain()" />
   </div>
-  <hr/>
   <div>
-    <input type="button" value="Fire" id="fire" onclick="chooseFire()" />
+    <input class="button"type="button" value="Fire" id="fire" onclick="chooseFire()" />
   </div>
-  <hr/>
   <div>
-    <input type="button" value="Stroboscop" id="stroboscop" onclick="chooseStroboscop()" />
+    <input class="button"type="button" value="Stroboscop" id="stroboscop" onclick="chooseStroboscop()" />
   </div>
-  <hr/>
   <div>
-    <input type="button" value="GradientMoving" id="GradientMoving" onclick="chooseGradientMoving()" />
-    <select id="gradientMovingChoose">
-        <option value="sunset">Sunset</option>
-        <option value="nether">Nether</option>
-        <option value="rgb">RGB</option>
-        <option value="redblue">Red Blue</option>
-      </select>
+    <input class="button"type="button" value="GradientMoving" id="GradientMoving" onclick="chooseGradientMoving()" />
+    <br>
+    <select class="button"id="gradientMovingChoose">
+      <option value="sunset">Sunset</option>
+      <option value="nether">Nether</option>
+      <option value="rgb">RGB</option>
+      <option value="redblue">Red Blue</option>
+    </select>  
   </div>
-  <hr/>
   <div>
-    <input type="button" value="GradientMusic" id="GradientMusic" onclick="chooseGradientMusic()" />
+    <input class="button"type="button" value="GradientMusic" id="GradientMusic" onclick="chooseGradientMusic()" />
   </div>
-  <hr/>
   <div>
-    <input type="button" value="FullColor" id="fullColor" onclick="chooseFullColor()" />
+    <input class="button"type="button" value="FullColor" id="fullColor" onclick="chooseFullColor()" />
   </div>
-  <hr/>
   <div>
-    <input type="button" value="FullColor2" id="fullColor2" onclick="chooseFullColor2()" />
+    <input class="button"type="button" value="FullColor2" id="fullColor2" onclick="chooseFullColor2()" />
   </div>    
 
 
 
-  <hr/>
   <div>
-    <input type="range" min="1" max="255" value="123" id="brightness" onchange="sendBrightness()" />
+    <input class="button" type="range" min="1" max="255" value="123" id="brightness" onchange="sendBrightness()" />
   </div>
-  <hr/>
   <div>
-    <input type="range" min="0" max="100" value="50" id="speed" onchange="sendSpeed()" />
+    <input class="button" type="range" min="0" max="100" value="50" id="speed" onchange="sendSpeed()" />
   </div>
-  <hr/>
   <div>
-    <input type="color" id="favcolor" name="favcolor" value="#ff0000" />
+    <input class="button" type="color" id="favcolor" name="favcolor" value="#ff0000" />
   </div>
-  <hr/>
   <div>
-    <input type="button" value="Submit" id="sumbit" onclick="ChangeBounceColor()" />
+    <input class="button"type="button" value="Submit" id="sumbit" onclick="ChangeBounceColor()" />
   </div>
-  <hr/>
   <div>
-    <input type="button" value="Submit2" id="sumbit2" onclick="ChangeStaticColor()" />
+    <input class="button"type="button" value="Submit2" id="sumbit2" onclick="ChangeStaticColor()" />
+  </div>
   </div>
 </body>
 </html>
+
+
+
 )=====";;
 
 #endif

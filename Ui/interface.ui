@@ -464,7 +464,7 @@ QPushButton:hover {
               <number>0</number>
              </property>
              <item>
-              <widget class="QPushButton" name="pushButton_5">
+              <widget class="QPushButton" name="button_connect">
                <property name="text">
                 <string>PushButton</string>
                </property>
@@ -583,7 +583,7 @@ QPushButton:hover {
           <item>
            <widget class="QStackedWidget" name="stackedWidget">
             <property name="currentIndex">
-             <number>1</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="page_1">
              <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -734,6 +734,18 @@ QPushButton:hover {
                  </item>
                  <item>
                   <widget class="QSlider" name="slider_brightness">
+                   <property name="minimum">
+                    <number>2</number>
+                   </property>
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                   <property name="pageStep">
+                    <number>1</number>
+                   </property>
+                   <property name="value">
+                    <number>123</number>
+                   </property>
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
                    </property>
@@ -741,6 +753,15 @@ QPushButton:hover {
                  </item>
                  <item>
                   <widget class="QSlider" name="slider_speed">
+                   <property name="maximum">
+                    <number>100</number>
+                   </property>
+                   <property name="pageStep">
+                    <number>1</number>
+                   </property>
+                   <property name="value">
+                    <number>50</number>
+                   </property>
                    <property name="orientation">
                     <enum>Qt::Horizontal</enum>
                    </property>
@@ -1132,6 +1153,7 @@ QPushButton:hover {
  </widget>
  <resources>
   <include location="icons.qrc"/>
+  <include location="../../../../.designer/backup/icons.qrc"/>
  </resources>
  <connections/>
 </ui>

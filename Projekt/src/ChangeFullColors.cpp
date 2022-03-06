@@ -3,8 +3,8 @@
 
 #include "Effect.cpp"
 #include <FastLED.h>
-#include <list>
 #include <iterator>
+#include <list>
 
 class ChangeFullColors : public Effect {
     int distance;
@@ -53,74 +53,60 @@ public:
     {
         auto l_front = colors.begin();
         std::advance(l_front, border);
-        for (int i = 0; i < NUM_LEDS; i++) {    
+        for (int i = 0; i < NUM_LEDS; i++) {
             leds[i] = *l_front;
         }
         Serial.print("border = ");
         Serial.println(border);
         Serial.print("Color = ");
         Serial.println(*l_front);
-        border++;
-        if(border == numberOfColors) {
-            border = 0;
-        }
-
-        FastLED.show();
-        delay(speed * 5);
-        /////////////////////
-        //     for (int i = 0; i < NUM_LEDS; i++) {
-        //         if (i < border) {
-        //             leds[i] = colors.front();
-        //         } else {
-        //             leds[i] = colors.back();
-        //         }
-        //     }
-        //     border++;
-        //     if (border % (NUM_LEDS + 1) == 45) {
-        //         border = 0;
-        //         CRGB tem = colors.front();
-        //         colors.pop_front();
-        //         colors.push_back(tem);
-        //     }
-        //     FastLED.show();
-        //     delay(speed);
-        }
-
-        void changeSpeed(int speed)
+        EVERY_N_SECONDS(1)
         {
-            this->speed = speed;
-        }
-
-        void changeBrightness(int b)
-        {
-            if (b == 0)
-                b = 3;
-            // this->brightness = b;
-            std::list<CRGB>::iterator p = colors.begin();
-            while (p != colors.end()) {
-                p->maximizeBrightness();
-                int howLow = 256 - b;
-                p->fadeLightBy(howLow);
-                p++;
+            border++;
+            if (border == numberOfColors) {
+                border = 0;
             }
+            // delay(speed * 5);
         }
+        FastLED.show();
+    }
 
-        void setDistance(int distance)
-        {
-            this->distance = distance;
-        }
+    void changeSpeed(int speed)
+    {
+        this->speed = speed;
+    }
 
-        void addColor(CRGB newColor)
-        {
-            newColor.maximizeBrightness();
-            int howLow = 255 - this->brightness;
-            newColor.fadeLightBy(howLow);
-            colors.push_back(newColor);
-            numberOfColors++;
+    void changeBrightness(int b)
+    {
+        if (b == 0)
+            b = 3;
+        // this->brightness = b;
+        std::list<CRGB>::iterator p = colors.begin();
+        while (p != colors.end()) {
+            p->maximizeBrightness();
+            int howLow = 256 - b;
+            p->fadeLightBy(howLow);
+            p++;
         }
+    }
 
-        virtual void changeColor(CRGB a) {
-        }
-    };
+    void setDistance(int distance)
+    {
+        this->distance = distance;
+    }
+
+    void addColor(CRGB newColor)
+    {
+        newColor.maximizeBrightness();
+        int howLow = 255 - this->brightness;
+        newColor.fadeLightBy(howLow);
+        colors.push_back(newColor);
+        numberOfColors++;
+    }
+
+    virtual void changeColor(CRGB a)
+    {
+    }
+};
 
 #endif

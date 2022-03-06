@@ -26,7 +26,6 @@ public:
 
     virtual void updateAndShow()
     {
-
         myPal = heatmap_gp;
         for (int i = 0; i < NUM_LEDS; i++) {
             leds[i] = ColorFromPalette(myPal, brightness);

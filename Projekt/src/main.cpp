@@ -68,7 +68,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             String substr = str.substring(1);
 
             if (substr == "train") {
+                Serial.println(speed);
                 delete effect;
+                Serial.print("after deletion");
+                Serial.print(speed);
                 Train* t = new Train(speed, brightness, 6, leds, NUM_LEDS);
                 t->addColor(CRGB(150, 150, 0));
                 t->addColor(CRGB(0, 150, 150));
@@ -91,10 +94,11 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 effect = t;
             } else if (substr == "static") {
                 delete effect;
+                Serial.print("destruktor zakonczony, zaczynanie nowego efektu");
                 effect = new StaticColor(brightness, leds, NUM_LEDS);
             } else if (substr == "rain") {
                 delete effect;
-                effect = new Rain(brightness, speed, CRGB::Green, leds, NUM_LEDS);
+                effect = new Rain(brightness, speed, CRGB::Blue, leds, NUM_LEDS);
             } else if (substr == "fire") {
                 delete effect;
                 effect = new Fire(brightness, speed, leds, NUM_LEDS);
@@ -208,11 +212,14 @@ void setup()
 void loop()
 {
     // auto start = std::chrono::steady_clock::now();
-    
     webSocket.loop();
     server.handleClient();
     effect->updateAndShow();
-    
+
+    Serial.print(".");
+    Serial.println("speed w mainie ");
+    Serial.println(speed);
+
     // auto end = std::chrono::steady_clock::now();
     // Serial.println(std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
     // char c[] = "costam";

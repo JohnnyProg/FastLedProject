@@ -62,7 +62,9 @@ public:
             colors.push_back(tem);
         }
         FastLED.show();
+        Serial.print(speed);
         delay(speed);
+        Serial.print("wykonal sie delay");
     }
 
     void changeSpeed(int speed)

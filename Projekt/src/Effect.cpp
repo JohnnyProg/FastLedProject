@@ -9,6 +9,7 @@ class Effect{
         CRGB color;
 
     public:
+        // virtual ~Effect() = 0;
         virtual void updateAndShow();
         virtual void changeBrightness(int b);
         virtual void changeSpeed(int s);

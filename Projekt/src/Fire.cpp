@@ -43,18 +43,20 @@ public:
         Sparks = 3;
         SparkHeight = 4;
         Sparking = 100;
-        bReversed = false;
-        bMirrored = false;
+        bReversed = true;
+        bMirrored = true;
 
         if (bMirrored)
             Size = Size / 2;
         heat = new byte[num_leds+8] { 0 };
     };
 
-    virtual ~Fire()
-    {
-        delete[] heat;
-    }
+    // ~Fire()
+    // {
+    //     Serial.print("ropoczety");
+    //     delete[] heat;
+    //     Serial.print("destruktor skonczony");
+    // }
 
     virtual void updateAndShow()
     {
@@ -83,12 +85,9 @@ public:
             }
         }
         delay(speed);
+        Serial.println("speed w efekcie ");
+        Serial.println(speed);
         FastLED.show();
-    }
-
-    void setSpeed(int speed)
-    {
-        this->speed = speed;
     }
 
     virtual void changeBrightness(int b)

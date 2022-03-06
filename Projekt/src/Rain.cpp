@@ -19,7 +19,7 @@ public:
         this->speed = speed;
         this->leds = leds;
         this->brightness = brightness;
-        color = color;
+        this->color = color;
     };
 
     virtual void updateAndShow()
