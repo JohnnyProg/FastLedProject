@@ -24,13 +24,16 @@ public:
 
     virtual void updateAndShow()
     {
+        Serial.println("update and show");
         for (int i = 0; i < NUM_LEDS; i++)
         {
             leds[i] = CRGB(0, 0, 0);
         }
-        
-        delay(speed);
+        Serial.println("wykonana petla");
+        // delay(speed);
+        Serial.println("delay wykonany");
         FastLED.show();
+        Serial.println("Fast led show wykonany");
     }
 
     void setSpeed(int speed)

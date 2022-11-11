@@ -6,6 +6,8 @@
 #include <iterator>
 #include <list>
 
+//efekt zmieniajacy kolory calego paska led co n milisekund
+
 class ChangeFullColors : public Effect {
     int distance;
     std::list<CRGB> colors;

@@ -15,6 +15,7 @@
 #include "GradientMusic.cpp"
 #include "ChangeFullColors.cpp"
 
+#include <SPIFFS.h>
 #include <Arduino.h> //podstawowa biblioteka
 #include <ESPmDNS.h> //dns połączenie
 #include <FastLED.h> //obsługa ledów !niekoniecznie musi być tutaj
@@ -25,8 +26,12 @@
 #include <cstdlib>
 #include <iostream>
 #include <chrono>   //mierzenie czasu
+#include "time.h"
 #define LED_PIN 2
-#define NUM_LEDS 297
+#define NUM_LEDS 260
+
+//test strony zajebistej
+
 
 int speed = 0;
 int brightness = 150;
@@ -36,7 +41,63 @@ WebServer server;
 WebSocketsServer webSocket = WebSocketsServer(81);
 Effect* effect;
 
-// plik html bo nie wiem jak go wsadzić gdziekolwiek indziej xDD
+
+namespace Counter {
+    const long GMTOFFSET = 3600;
+    const long GMTDAYLIGHTOFFSET = 0;
+    const char* SERVERTIME = "pool.ntp.org";
+
+    struct tm actualTime;
+    struct tm disableTime;
+    int disableTimeInSec;
+    hw_timer_t* myTimer = NULL;     //tworzenie zmiennej do konfiguracji timera
+
+    void printLocalTime() {
+        if(!getLocalTime(&actualTime)) {
+            Serial.println("Failed to obtain time");
+        }
+
+        Serial.println(&actualTime, "%H, %M, %S");
+    }
+
+    void checkIfDisableReady() {
+        getLocalTime(&actualTime);
+        int actualTimeInSec = actualTime.tm_hour * 3600 + actualTime.tm_min * 60 + actualTime.tm_sec;
+        if (actualTimeInSec > disableTimeInSec && actualTimeInSec-disableTimeInSec < 100) {
+            delete effect;
+            effect = new Disable(leds, NUM_LEDS);
+        }
+    }
+
+    void configureTimer() {
+        configTime(GMTOFFSET, GMTDAYLIGHTOFFSET, SERVERTIME);
+        printLocalTime();
+    }
+
+    void enableCounter() {
+        myTimer = timerBegin(0, 160, true); // konfiguracja timera; wybor timera, prescaler i kierunek liczenia: up
+        timerAttachInterrupt(myTimer, &checkIfDisableReady , true);
+
+        timerAlarmWrite(myTimer, 10000000, true);
+        timerAlarmEnable(myTimer);
+    }
+
+    void disableCounter() {
+        timerAlarmDisable(myTimer);
+    }
+
+    static void setDisableTIme(struct tm x) {
+        disableTime = x;
+        disableTimeInSec = disableTime.tm_hour * 3600 + disableTime.tm_min * 60 + disableTime.tm_sec;
+    }
+
+    
+
+    
+}
+
+
+
 
 // obsługa komunikacji z klientem, w stronę; odbieranie danych z przeglądarki; komunikacja klient->serwer
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
@@ -168,6 +229,30 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
     // Serial.print("end");
 }
 
+// void onIndexRequest(AsyncWebServerRequest *request) {
+//     IPAddress remote_ip = request->client()->remoteIP();
+//     Serial.println("[" + remote_ip.toString() + "] HTTP get request of " + request->url());
+//     request->send(SPIFFS, "/index.html", "text/html");
+// }
+
+void serveIndexFile() {
+    File file = SPIFFS.open("/index.html", "r");
+    server.streamFile(file, "text/html");
+    file.close();
+}
+
+void serveIndexCssFile() {
+    File file2 = SPIFFS.open("/css/index.css", "r");
+    server.streamFile(file2, "text/css");
+    file2.close();
+}
+
+void serveIndexJSFile() {
+    File file = SPIFFS.open("/js/index.js", "r");
+    server.streamFile(file, "text/css");
+    file.close();
+}
+
 // konfiguracja serwera, websocketa, dnsa
 void setupServer(std::string ssid, std::string password)
 {
@@ -189,9 +274,13 @@ void setupServer(std::string ssid, std::string password)
         }
     }
     Serial.println("mDNS responder started");
-    server.on("/", []() {
-        server.send_P(200, "text/html", webpage123);
-    });
+    // server.on("/", []() {
+    //     server.send_P(200, "text/html", webpage123);
+    // });
+    SPIFFS.begin();
+    server.on("/", serveIndexFile);
+    server.on("/css/index.css", serveIndexCssFile);
+    server.on("/js/index.js", serveIndexJSFile);
     server.begin();
     webSocket.begin();
     webSocket.onEvent(webSocketEvent);
@@ -200,11 +289,16 @@ void setupServer(std::string ssid, std::string password)
 void setup()
 {
     Serial.begin(115200);
+
     FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEDS);
     // server.start("Dom", "Kabanos1", NUM_LEDS, leds);
-    setupServer("UPC3356958", "m3sdBthjwfus");
+    // setupServer("UPC3356958", "m3sdBthjwfus");
+    setupServer("UPC9453756", "Papiez2137");
     effect = new Rainbow(speed, brightness, 10, leds, NUM_LEDS);
     // effect = new StaticColor(brightness, leds, NUM_LEDS);
+
+    Counter::configureTimer();
+    Counter::enableCounter();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,9 +310,9 @@ void loop()
     server.handleClient();
     effect->updateAndShow();
 
-    Serial.print(".");
-    Serial.println("speed w mainie ");
-    Serial.println(speed);
+    //Serial.print(".");
+    //Serial.println("speed w mainie ");
+    //Serial.println(speed);
 
     // auto end = std::chrono::steady_clock::now();
     // Serial.println(std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
