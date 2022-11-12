@@ -15,7 +15,7 @@ function chooseDisable() {
     Socket.send("Edisable");
 }
 function chooseTrain() {
-    console.log("pociag costam");
+    console.log("pociasg costam");
     Socket.send("Etrain");
 }
 function chooseRainbow() {
@@ -59,8 +59,15 @@ function sendSpeed() {
     Socket.send("VS" + document.getElementById("speed").value);
 }
 function ChangeBounceColor() {
-    Socket.send("VCB" + document.getElementById("favcolor").value);
+    // Socket.send("VCB" + document.getElementById("favcolor").value);
+    console.log("VCB" + document.getElementById("favcolor").value)
 }
 function ChangeStaticColor() {
     Socket.send("VCS" + document.getElementById("favcolor").value);
+}
+function EnableTimer() {
+    Socket.send("VTS" + document.getElementById("clocl").value);
+}
+function DisableTimer() {
+    Socket.send("VTD");
 }

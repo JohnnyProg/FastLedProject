@@ -15,6 +15,8 @@
 #include "GradientMusic.cpp"
 #include "ChangeFullColors.cpp"
 
+#include "Counter.h"
+
 #include <SPIFFS.h>
 #include <Arduino.h> //podstawowa biblioteka
 #include <ESPmDNS.h> //dns połączenie
@@ -40,63 +42,6 @@ CRGB leds[NUM_LEDS];
 WebServer server;
 WebSocketsServer webSocket = WebSocketsServer(81);
 Effect* effect;
-
-
-namespace Counter {
-    const long GMTOFFSET = 3600;
-    const long GMTDAYLIGHTOFFSET = 0;
-    const char* SERVERTIME = "pool.ntp.org";
-
-    struct tm actualTime;
-    struct tm disableTime;
-    int disableTimeInSec;
-    hw_timer_t* myTimer = NULL;     //tworzenie zmiennej do konfiguracji timera
-
-    void printLocalTime() {
-        if(!getLocalTime(&actualTime)) {
-            Serial.println("Failed to obtain time");
-        }
-
-        Serial.println(&actualTime, "%H, %M, %S");
-    }
-
-    void checkIfDisableReady() {
-        getLocalTime(&actualTime);
-        int actualTimeInSec = actualTime.tm_hour * 3600 + actualTime.tm_min * 60 + actualTime.tm_sec;
-        if (actualTimeInSec > disableTimeInSec && actualTimeInSec-disableTimeInSec < 100) {
-            delete effect;
-            effect = new Disable(leds, NUM_LEDS);
-        }
-    }
-
-    void configureTimer() {
-        configTime(GMTOFFSET, GMTDAYLIGHTOFFSET, SERVERTIME);
-        printLocalTime();
-    }
-
-    void enableCounter() {
-        myTimer = timerBegin(0, 160, true); // konfiguracja timera; wybor timera, prescaler i kierunek liczenia: up
-        timerAttachInterrupt(myTimer, &checkIfDisableReady , true);
-
-        timerAlarmWrite(myTimer, 10000000, true);
-        timerAlarmEnable(myTimer);
-    }
-
-    void disableCounter() {
-        timerAlarmDisable(myTimer);
-    }
-
-    static void setDisableTIme(struct tm x) {
-        disableTime = x;
-        disableTimeInSec = disableTime.tm_hour * 3600 + disableTime.tm_min * 60 + disableTime.tm_sec;
-    }
-
-    
-
-    
-}
-
-
 
 
 // obsługa komunikacji z klientem, w stronę; odbieranie danych z przeglądarki; komunikacja klient->serwer
@@ -223,6 +168,24 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 Serial.println(color);
                 CRGB a = color;
                 effect->changeColor(a);
+            } else if (str[1] == 'T') {
+                if (str[2] == 'S'){
+                    String substr1 = str.substring(3, 5);
+                    String substr2 = str.substring(6, 8);
+                    Serial.println(substr1);
+                    Serial.println(substr2);
+                    char* p;
+                    int hour = strtol(substr1.c_str(), &p, 10);
+                    int minute = strtol(substr2.c_str(), &p, 10);
+                    
+                    long timeInSeconds = hour * 3600 + minute * 60;
+                    Serial.println(timeInSeconds);
+                    Counter::setDistanceTime(timeInSeconds);
+                    Counter::enableCounter();
+
+                }else if (str[2] == 'D') {
+                    Counter::disableCounter();
+                }
             }
         }
     }
@@ -297,8 +260,8 @@ void setup()
     effect = new Rainbow(speed, brightness, 10, leds, NUM_LEDS);
     // effect = new StaticColor(brightness, leds, NUM_LEDS);
 
-    Counter::configureTimer();
-    Counter::enableCounter();
+    Counter::configureTimer(&effect, leds, NUM_LEDS);
+    // Counter::enableCounter();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -307,8 +270,11 @@ void loop()
 {
     // auto start = std::chrono::steady_clock::now();
     webSocket.loop();
+    //Serial.println("Loopwebsocketa");
     server.handleClient();
+    //Serial.println("server.handleClient");
     effect->updateAndShow();
+    // Serial.println("UpdateAndShow");
 
     //Serial.print(".");
     //Serial.println("speed w mainie ");
