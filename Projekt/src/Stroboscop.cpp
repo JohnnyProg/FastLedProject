@@ -23,7 +23,9 @@ public:
         color = color;
         on = true;
     };
-
+    ~Stroboscop() {
+        
+    }
     virtual void updateAndShow()
     {
         if(on) {
@@ -60,6 +62,7 @@ public:
     virtual void changeColor(CRGB a) {
         this->color = a;
     }
+    void sendPayload(uint8_t* payload) {}
 };
 
 #endif

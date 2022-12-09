@@ -18,6 +18,10 @@ function chooseTrain() {
     console.log("pociasg costam");
     Socket.send("Etrain");
 }
+function chooseTV() {
+    console.log("telewizor efekt");
+    Socket.send("Etv");
+}
 function chooseRainbow() {
     Socket.send("Erainbow");
 }

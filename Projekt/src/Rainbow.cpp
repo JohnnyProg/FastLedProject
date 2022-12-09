@@ -21,7 +21,9 @@ public:
         this->leds = leds;
         this->brightness = brightness;
     };
+    ~Rainbow() {
 
+    }
     virtual void updateAndShow()
     {
             for (int i = 0; i < NUM_LEDS; i++) {
@@ -33,29 +35,21 @@ public:
         
     }
 
-    void setSpeed(int speed)
-    {
-        this->speed = speed;
-    }
 
-    void setDistance(int distance)
-    {
-        this->distance = distance;
-    }
-
-    virtual void changeBrightness(int b)
+    void changeBrightness(int b)
     {
         this->brightness = b;
     }
 
-    virtual void changeSpeed(int s)
+    void changeSpeed(int s)
     {
         speed = s;
     }
 
-    virtual void changeColor(CRGB a)
+    void changeColor(CRGB a)
     {
     }
+    void sendPayload(uint8_t* payload) {}
 };
 
 #endif

@@ -19,7 +19,9 @@ public:
         this->leds = leds;
         this->brightness = brightness;
     };
-
+    ~RainbowFull() {
+        
+    }
     virtual void updateAndShow()
     {
         for (int i = 0; i < NUM_LEDS; i++) {
@@ -45,6 +47,7 @@ public:
 
     virtual void changeColor(CRGB a) {
     }
+    void sendPayload(uint8_t* payload) {}
 };
 
 #endif

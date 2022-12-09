@@ -34,7 +34,9 @@ public:
         this->leds = leds;
         numberOfColors = 0;
     };
-
+    ~TrainsWithManyColors() {
+        
+    }
     // virtual void updateAndShow()
     // {
     //     for (CRGB x : colors) {
@@ -120,6 +122,7 @@ public:
 
         virtual void changeColor(CRGB a) {
         }
+        void sendPayload(uint8_t* payload) {}
     };
 
 #endif

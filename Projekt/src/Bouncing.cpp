@@ -31,7 +31,9 @@ public:
         position = 0;
         direction = true;
     }
-
+    ~Bouncing() {
+        
+    }
     virtual void updateAndShow()
     {
         for (int i = 0; i < NUM_LEDS; i++) {
@@ -72,6 +74,9 @@ public:
 
     virtual void changeColor(CRGB a) {
         this->color = a;
+    }
+    void sendPayload(uint8_t* payload) {
+        
     }
 };
 #endif

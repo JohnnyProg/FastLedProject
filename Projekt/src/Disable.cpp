@@ -21,7 +21,10 @@ public:
         this->brightness = brightness;
         color = color;
     };
-
+    
+    ~Disable() {
+        
+    }
     virtual void updateAndShow()
     {
         Serial.println("update and show");
@@ -56,6 +59,7 @@ public:
     virtual void changeColor(CRGB a) {
         this->color = a;
     }
+    void sendPayload(uint8_t* payload) {}
 };
 
 #endif

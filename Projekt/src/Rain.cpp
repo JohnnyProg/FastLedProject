@@ -22,6 +22,10 @@ public:
         this->color = color;
     };
 
+    ~Rain() {
+        
+    }
+
     virtual void updateAndShow()
     {
         int liczba;
@@ -59,6 +63,7 @@ public:
     virtual void changeColor(CRGB a) {
         this->color = a;
     }
+    void sendPayload(uint8_t* payload) {}
 };
 
 #endif

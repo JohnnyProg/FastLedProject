@@ -57,11 +57,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # slidery
         # self.ui.slider_speed.sliderReleased.connect(lambda: server.send("VB" + str(self.ui.slider_speed.value())))
-        self.ui.slider_speed.valueChanged.connect(lambda: server.send("VB" + str(self.ui.slider_speed.value())))
+        self.ui.slider_speed.valueChanged.connect(lambda: server.send("VS" + str(self.ui.slider_speed.value())))
         # self.ui.slider_brightness.sliderReleased.connect(lambda: server.send("VB" + str(self.ui.slider_brightness.value())))
         self.ui.slider_brightness.valueChanged.connect(lambda: server.send("VB" + str(self.ui.slider_brightness.value())))
 
-        self.worker = VolumeAnalizerThread(server)
+        # self.worker = VolumeAnalizerThread(server)
         self.ui.button_search.clicked.connect(lambda: self.evt_btnStart_clicked())
 
         self.show()

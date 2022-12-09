@@ -528,7 +528,7 @@ class Ui_MainWindow(object):
         self.button_menu_foot.setText(_translate("MainWindow", "exit"))
         self.line_search.setPlaceholderText(_translate("MainWindow", "Search"))
         self.button_search.setText(_translate("MainWindow", "PushButton"))
-        self.pushButton_5.setText(_translate("MainWindow", "PushButton"))
+        self.pushButton_5.setText(_translate("MainWindow", "Połącz"))
         self.button_led_power.setText(_translate("MainWindow", "Enable Leds"))
         self.button_train.setText(_translate("MainWindow", "Train"))
         self.button_bounce.setText(_translate("MainWindow", "Bounce"))

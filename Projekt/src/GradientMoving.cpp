@@ -25,7 +25,9 @@ public:
         color = color;
         paletteIndex = 0;
     };
-
+    ~GradientMoving() {
+        
+    }
     virtual void updateAndShow()
     {
         switch (gradient)
@@ -82,6 +84,7 @@ public:
     virtual void changeColor(CRGB a) {
         this->color = a;
     }
+    void sendPayload(uint8_t* payload) {}
 };
 
 #endif

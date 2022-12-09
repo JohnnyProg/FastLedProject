@@ -23,7 +23,9 @@ public:
         color = color;
         paletteIndex = 0;
     };
-
+    ~GradientMusic() {
+        
+    }
     virtual void updateAndShow()
     {
         myPal = heatmap_gp;
@@ -52,6 +54,7 @@ public:
     {
         this->color = a;
     }
+    void sendPayload(uint8_t* payload) {}
 };
 
 #endif

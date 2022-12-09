@@ -51,12 +51,12 @@ public:
         heat = new byte[num_leds+8] { 0 };
     };
 
-    // ~Fire()
-    // {
-    //     Serial.print("ropoczety");
-    //     delete[] heat;
-    //     Serial.print("destruktor skonczony");
-    // }
+    ~Fire()
+    {
+        Serial.print("ropoczety");
+        delete[] heat;
+        Serial.print("destruktor skonczony");
+    }
 
     virtual void updateAndShow()
     {
@@ -112,6 +112,7 @@ public:
     {
         this->color = a;
     }
+    void sendPayload(uint8_t* payload) {}
 };
 
 #endif

@@ -32,7 +32,9 @@ public:
         this->distance = distance;
         this->leds = leds;
     };
-
+    ~Train() {
+        
+    }
     // virtual void updateAndShow()
     // {
     //     for (CRGB x : colors) {
@@ -102,6 +104,7 @@ public:
     void changeColor(CRGB a) {
         this->color = a;
     }
+    void sendPayload(uint8_t* payload) {}
 };
 
 #endif

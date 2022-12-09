@@ -14,6 +14,7 @@
 #include "GradientMoving.cpp"
 #include "GradientMusic.cpp"
 #include "ChangeFullColors.cpp"
+#include "Tv.cpp"
 
 #include "Counter.h"
 
@@ -47,15 +48,17 @@ Effect* effect;
 // obsługa komunikacji z klientem, w stronę; odbieranie danych z przeglądarki; komunikacja klient->serwer
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 {
-    //Serial.println("wiadomość dotarła");
+    // Serial.println("wiadomość dotarła");
     //Serial.print(webSocket.connectedClients());
     // String str = (char*)payload;
     // Serial.println(str);
     if (type == WStype_TEXT) {
         //Serial.println(brightness);
         String str = (char*)payload;
-        Serial.println(str);
-        if (str[0] == 'T') {
+        // Serial.println(str);
+        if(str[0] == 'U') {
+            effect->sendPayload(payload);
+        } else if (str[0] == 'T') {
             int r = static_cast<unsigned char>(payload[1]);
             int g = static_cast<unsigned char>(payload[2]);
             int b = static_cast<unsigned char>(payload[3]);
@@ -148,6 +151,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 t->addColor(CRGB(0, 0, 255));
                 t->addColor(CRGB(255, 0, 255));
                 effect = t;
+            } else if (substr == "tv") {
+                delete effect;
+                effect = new Tv(brightness, leds, 0, 150, NUM_LEDS);
             }
         } else if (str[0] == 'V') {
             if (str[1] == 'B') {

@@ -9,11 +9,13 @@ class Effect{
         CRGB color;
 
     public:
-        // virtual ~Effect() = 0;
+        virtual ~Effect(){};
+        
         virtual void updateAndShow();
         virtual void changeBrightness(int b);
         virtual void changeSpeed(int s);
         virtual void changeColor(CRGB color);
+        virtual void sendPayload(uint8_t* payload);
 };
 
 #endif
