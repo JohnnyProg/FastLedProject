@@ -29,13 +29,12 @@
 #include <cstdlib>
 #include <iostream>
 #include <chrono>   //mierzenie czasu
-#include "time.h"
+#include "time.h"   
+#include <ArduinoOTA.h> //send code by air
 #define LED_PIN 2
-#define NUM_LEDS 260
+#define NUM_LEDS 297
 
-//test strony zajebistej
-
-
+//initial global values
 int speed = 0;
 int brightness = 150;
 // tworzenie serwera, efektu działającego i ledów
@@ -45,17 +44,30 @@ WebSocketsServer webSocket = WebSocketsServer(81);
 Effect* effect;
 
 
-// obsługa komunikacji z klientem, w stronę; odbieranie danych z przeglądarki; komunikacja klient->serwer
+/*
+obsługa komunikacji z klientem, w stronę; odbieranie danych z przeglądarki; komunikacja klient->serwer
+huge and dumb way to handle websockets data
+
+U* -> send payload to effect
+T* -> change color of effect
+p* -> change brightness 0-255
+E* -> change effect:
+    Etrain -> train effect
+    ...
+    Erainbow -> rainbow effect
+V* -> change value:
+    B* -> change brightness
+    S* -> change speed/delay
+    C* -> change color
+    T* -> timer:
+        S* -> set timer to values send in payload
+        D -> disable couter 
+
+*/
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
 {
-    // Serial.println("wiadomość dotarła");
-    //Serial.print(webSocket.connectedClients());
-    // String str = (char*)payload;
-    // Serial.println(str);
     if (type == WStype_TEXT) {
-        //Serial.println(brightness);
         String str = (char*)payload;
-        // Serial.println(str);
         if(str[0] == 'U') {
             effect->sendPayload(payload);
         } else if (str[0] == 'T') {
@@ -153,10 +165,10 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 effect = t;
             } else if (substr == "tv") {
                 delete effect;
-                effect = new Tv(brightness, leds, 0, 150, NUM_LEDS);
+                effect = new Tv(brightness, leds, 0, 140, NUM_LEDS);
             }
         } else if (str[0] == 'V') {
-            if (str[1] == 'B') {
+            if (str[1] == 'B') { 
                 brightness = (int)strtol((const char*)&payload[2], NULL, 10);
                 Serial.println(brightness);
                 effect->changeBrightness(brightness);
@@ -198,12 +210,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
     // Serial.print("end");
 }
 
-// void onIndexRequest(AsyncWebServerRequest *request) {
-//     IPAddress remote_ip = request->client()->remoteIP();
-//     Serial.println("[" + remote_ip.toString() + "] HTTP get request of " + request->url());
-//     request->send(SPIFFS, "/index.html", "text/html");
-// }
 
+//this 3 functions serve index html, css and js files on request
 void serveIndexFile() {
     File file = SPIFFS.open("/index.html", "r");
     server.streamFile(file, "text/html");
@@ -222,7 +230,7 @@ void serveIndexJSFile() {
     file.close();
 }
 
-// konfiguracja serwera, websocketa, dnsa
+//dnsa server, websocket and mdns configuration
 void setupServer(std::string ssid, std::string password)
 {
     WiFi.begin(ssid.c_str(), password.c_str());
@@ -255,6 +263,7 @@ void setupServer(std::string ssid, std::string password)
     webSocket.onEvent(webSocketEvent);
 }
 
+//setup start as first and configure network connection, OTA, start defaoult effect and start timer
 void setup()
 {
     Serial.begin(115200);
@@ -263,6 +272,47 @@ void setup()
     // server.start("Dom", "Kabanos1", NUM_LEDS, leds);
     // setupServer("UPC3356958", "m3sdBthjwfus");
     setupServer("UPC9453756", "Papiez2137");
+    ArduinoOTA.setHostname("esp32");
+    ArduinoOTA.onStart([]() {
+        String type;
+        if (ArduinoOTA.getCommand() == U_FLASH) {
+            type = "sketch";
+        } else {  // U_FS
+            type = "filesystem";
+        }
+
+        // NOTE: if updating FS this would be the place to unmount FS using FS.end()
+        Serial.println("Start updating " + type);
+    });
+    
+    ArduinoOTA.onEnd([]() {
+        Serial.println("\nEnd");
+    });
+    
+    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+        Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+    });
+
+    ArduinoOTA.onError([](ota_error_t error) {
+        Serial.printf("Error[%u]: ", error);
+        if (error == OTA_AUTH_ERROR) {
+            Serial.println("Auth Failed");
+        } else if (error == OTA_BEGIN_ERROR) {
+            Serial.println("Begin Failed");
+        } else if (error == OTA_CONNECT_ERROR) {
+            Serial.println("Connect Failed");
+        } else if (error == OTA_RECEIVE_ERROR) {
+            Serial.println("Receive Failed");
+        } else if (error == OTA_END_ERROR) {
+            Serial.println("End Failed");
+        }
+    });
+    ArduinoOTA.begin();
+
+    // Train* t = new Train(speed, brightness, 6, leds, NUM_LEDS);
+    // t->addColor(CRGB(150, 150, 0));
+    // t->addColor(CRGB(0, 150, 150));
+    // effect = t;
     effect = new Rainbow(speed, brightness, 10, leds, NUM_LEDS);
     // effect = new StaticColor(brightness, leds, NUM_LEDS);
 
@@ -270,8 +320,8 @@ void setup()
     // Counter::enableCounter();
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//this is main loop of program, it handle websocket, OTA and update actual effect
 void loop()
 {
     // auto start = std::chrono::steady_clock::now();
@@ -281,7 +331,7 @@ void loop()
     //Serial.println("server.handleClient");
     effect->updateAndShow();
     // Serial.println("UpdateAndShow");
-
+    ArduinoOTA.handle();
     //Serial.print(".");
     //Serial.println("speed w mainie ");
     //Serial.println(speed);
