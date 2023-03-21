@@ -57,7 +57,7 @@ public:
             }
         }
         border++;
-        if (border % (NUM_LEDS + 1) == 45) {
+        if (border == NUM_LEDS) {
             border = 0;
             CRGB tem = colors.front();
             colors.pop_front();

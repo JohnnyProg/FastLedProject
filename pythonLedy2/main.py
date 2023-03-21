@@ -135,11 +135,12 @@ from scipy.interpolate import interp1d
 from scipy.fftpack import fft, fftfreq
 
 print("start")
+# TV
 CHUNK = 2**9
 RATE = 48000
-
-CHUNK = 2**10
-RATE = 44100
+# słuchawki
+# CHUNK = 2**10
+# RATE = 44100
 
 def translate(value, leftMin, leftMax, rightMin, rightMax):
     # Figure out how 'wide' each range is
@@ -159,10 +160,16 @@ for i in range(0, 14):
     print(p.get_device_info_by_index(i))
 
 SPEAKERS = p.get_default_output_device_info()["hostApi"]
+print("speakers: ")
 print(SPEAKERS)
+# TV
 stream=p.open(format=pyaudio.paInt16,channels=1,rate=RATE,input=True,
-              frames_per_buffer=CHUNK,input_device_index=1)
+              frames_per_buffer=CHUNK,input_device_index=9, as_loopback = True)
+# Słuchawki
+# stream=p.open(format=pyaudio.paInt16,channels=1,rate=RATE,input=True,
+#               frames_per_buffer=CHUNK,input_device_index=3, as_loopback = True)
 # print("dane wejsciowe", channelcount, int(device_info["defaultSampleRate"]), defaultframes, device_info['index'], useloopback)
+
 
 # , input_device_index=2
 print("strea opened")
@@ -172,7 +179,7 @@ print("es")
 ws.connect("ws://192.168.0.129:81")
 print("connected")
 true_value = 40
-data_for_fft_freq = np.fromstring(stream.read(CHUNK),dtype=np.int16)
+# data_for_fft_freq = np.fromstring(stream.read(CHUNK),dtype=np.int16)
 
 # fft_freq = fftfreq(len(data_for_fft_freq), d=1/(RATE/CHUNK))
 # fft_freq = fft_freq * CHUNK
@@ -215,7 +222,7 @@ def analize_volume(data):
     # bass busted values
     # m = translate(peak, 0, 30182, 10, 400)
     # avenged sevenfold tested
-    m = translate(peak, 0, 30182, 10, 800)
+    m = translate(peak, 0, 30182, 10, 7000)
     # testy inne
     # m = translate(peak, 0, 20182, 10, 250)
     # m = translate(peak, 0, 15182, 10, 250)
@@ -223,13 +230,13 @@ def analize_volume(data):
     return m
 
 DECREASE_BRIGHTNESS_SPEED = 10
-while True:
+while False:
     # start = time.time()
     data = np.fromstring(stream.read(CHUNK),dtype=np.int16)
 
     # equalizer
-    m = analize_EQ(data)
-    # m = analize_volume(data)
+    # m = analize_EQ(data)
+    m = analize_volume(data)
 
     if m > true_value:
         true_value = m
@@ -245,7 +252,7 @@ while True:
     # end = time.time()
     # time.sleep(0.07)
     ws.send(s)
-    # print(true_value)
+    print(true_value)
 
     # print(end-start)
 
@@ -413,8 +420,36 @@ for i, x in enumerate(d.displays):
 # print(chr(color[0]), chr(color[1]),chr(color[2]))
 width = 1824
 height = 1026
+# width = 1920
+# height = 1080
+
+widthPadding = 0
+heightPadding = 0
+
 widthAmount = 45
 heightAmount = 25
+
+aspect_ratio = 21/9
+
+
+ratio_height = height
+ratio_width = width
+
+# jezeli jest bardziej kinowe niz 16/9
+if aspect_ratio > 1.77:
+    ratio_height = width / aspect_ratio
+    difference = height - ratio_height
+    heightPadding = difference / 2
+    # height = ratio_height
+# jezeli jest bardziej kwadratowe
+else:
+    ratio_width = height * aspect_ratio
+    difference = width - ratio_width
+    widthPadding = difference / 2
+    # width = ratio_width
+
+print(f"ratio height: {ratio_height}, ratio width: {ratio_width}")
+print(f"heightPadding: {heightPadding}, widthPadding: {widthPadding}")
 widthStep = int(width / widthAmount)
 heightStep = int(height / heightAmount)
 print(widthStep, heightStep)
@@ -429,7 +464,7 @@ def calculateColorsNumpy():
     screenshot_numpy = np.asarray(screenshot)
     averages = []
 
-    start_time = time.perf_counter()
+
     for x in range(widthAmount):
         new = screenshot_numpy[:heightStep,x * widthStep: (x + 1) * widthStep,:]
         m_mean = new.mean(axis=(0, 1))
@@ -447,9 +482,8 @@ def calculateColorsNumpy():
         m_mean = new.mean(axis=(0, 1))
         averages.append(m_mean)
 
-    time1 = time.perf_counter() - start_time
+
     print(f"done in {time.perf_counter() - start_time: .5f}")
-    # times[i] = time1
     # messag = bytearray()
     # messag.append(85)
     # for x in boxes:
@@ -459,26 +493,18 @@ def calculateColorsNumpy():
     #     messag.append(x[2])
 
 
-def calculateWithNumpy2():
-    screenshot = d.screenshot()
-    screenshot_numpy = np.asarray(screenshot)
-    averages = []
-    up = screenshot_numpy[:heightStep, :, :]
-    down = screenshot_numpy[-1 * heightStep:, :, :]
-    left = screenshot_numpy[:, : widthStep, :]
-    right = screenshot_numpy[:, : -1*widthStep, :]
-    print(f"shape of up: {left.shape}")
-    up_splitted = np.array_split(up, widthStep)
-    print(f"shape of up_splitted: {type(up_splitted)}")
+
 
 
 def calculateColorPILL():
 
     screenshot = d.screenshot()
     boxes = []
+    index = 0
     for x in range(widthAmount-1, -1, -1):
         new = screenshot.crop((x * widthStep, height - heightStep, (x+1)*widthStep, height)).resize((1, 1))
         boxes.append(new.getpixel((0,0)))
+
         # dst.paste(new, (x * widthStep, height - heightStep))
     for x in range(heightAmount-1, -1, -1):
         new = screenshot.crop((0, x * heightStep, widthStep, (x+1) * heightStep)).resize((1, 1))
@@ -504,20 +530,46 @@ def calculateColorPILL():
 #
 #     ws.send(messag)
 
-while True:
+def calculateWithNumpy2():
 
     screenshot = d.screenshot()
+    screenshot_numpy = np.asarray(screenshot)
+    averages = []
+    up = screenshot_numpy[:heightStep, :, :]
+    down = screenshot_numpy[-1 * heightStep:, :, :]
+    left = screenshot_numpy[:, : widthStep, :]
+    right = screenshot_numpy[:, : -1 * widthStep, :]
+    # print(f"shape of up: {type(left)}")
+    up_splitted = np.array_split(up, widthStep)
+    down_splitted = np.array_split(down, widthStep)
+    left_splitted = np.array_split(left, heightStep)
+    rigth_splitted = np.array_split(right, heightStep)
+    averages.append((x.mean(axis = (0, 1)) for x in up_splitted))
+    averages.append((x.mean(axis=(0, 1)) for x in down_splitted))
+    averages.append((x.mean(axis=(0, 1)) for x in left_splitted))
+    averages.append((x.mean(axis=(0, 1)) for x in rigth_splitted))
+
+
+times = np.empty(1000)
+while True:
+    # start_time = time.perf_counter()
+    # calculateWithNumpy2()
+    # time1 = time.perf_counter() - start_time
+    # times[i] = time1
+    screenshot = d.screenshot()
     boxes = []
+    print("alskdjalks")
     for x in range(widthAmount - 1, -1, -1):
-        new = screenshot.crop((x * widthStep, height - heightStep, (x + 1) * widthStep, height)).resize((1, 1))
+        new = screenshot.crop((x * widthStep, height - heightStep - heightPadding, (x + 1) * widthStep, height - heightPadding)).resize((1, 1))
         boxes.append(new.getpixel((0, 0)))
+
         # dst.paste(new, (x * widthStep, height - heightStep))
     for x in range(heightAmount - 1, -1, -1):
         new = screenshot.crop((0, x * heightStep, widthStep, (x + 1) * heightStep)).resize((1, 1))
         boxes.append(new.getpixel((0, 0)))
         # dst.paste(new, (0, x * heightStep) )
     for x in range(widthAmount):
-        new = screenshot.crop((x * widthStep, 0, (x + 1) * widthStep, heightStep)).resize((1, 1))
+        new = screenshot.crop((x * widthStep, heightPadding, (x + 1) * widthStep, heightStep + heightPadding)).resize((1, 1))
         boxes.append(new.getpixel((0, 0)))
         # dst.paste(new, (x * widthStep, 0))
     for x in range(heightAmount):
@@ -534,12 +586,7 @@ while True:
         messag.append(x[2])
 
     ws.send(messag)
-    # avrColor = screenshot.resize((1, 1))
-    # color = avrColor.getpixel((0, 0))
-    # # print(color)
-    # # s ="T" + chr(color[0]) + chr(color[1]) + chr(color[2])
-    # # print(tablica)
-    #
+
     # # flag = bytes('T', 'utf-8')
     # message = bytearray()
     # flaga = 'T'
@@ -555,12 +602,12 @@ while True:
     # # print(s)
     # ws.send(message)
 
-    # print(boxes[59])
+    print(boxes[59])
     # print(end - start_time)
     # sum += time.time() - start_time
     # counter += 1
 
-# print(f"average = {times.mean()}")
-# print(f"std = {times.std()}")
+print(f"average = {times.mean()}")
+print(f"std = {times.std()}")
 
 ws.close

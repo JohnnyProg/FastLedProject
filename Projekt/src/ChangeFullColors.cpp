@@ -66,14 +66,14 @@ public:
         Serial.println(border);
         Serial.print("Color = ");
         Serial.println(*l_front);
-        EVERY_N_SECONDS(1)
-        {
+        // EVERY_N_SECONDS(1)
+        // {
             border++;
             if (border == numberOfColors) {
                 border = 0;
             }
-            // delay(speed * 5);
-        }
+            delay(speed * 5);
+        // }
         FastLED.show();
     }
 
